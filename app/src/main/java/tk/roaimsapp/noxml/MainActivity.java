@@ -23,6 +23,7 @@ import android.text.Html;
 import android.util.Log;
 import android.view.Gravity;
 import android.text.TextUtils;
+import android.text.method.ScrollingMovementMethod;
 
 public class MainActivity extends Activity implements OnClickListener, MenuItem.OnMenuItemClickListener
 {
@@ -65,13 +66,11 @@ public class MainActivity extends Activity implements OnClickListener, MenuItem.
             dialogInfo.setCancelable(true);
             if(tvInfo==null){
                 tvInfo = new TextView(this);
-                tvInfo.setEllipsize(TextUtils.TruncateAt.MARQUEE);
-                tvInfo.setSelected(true);
+                tvInfo.setMovementMethod(new ScrollingMovementMethod());
                 tvInfo.setPadding(10,10,10,10);
                 tvInfo.setTextColor(Color.WHITE);
                 tvInfo.setTextSize(15);
                 tvInfo.setText(Html.fromHtml(info));
-                tvInfo.setOnClickListener(new DynamicClickListener());
             }
             dialogInfo.setContentView(tvInfo);
         }
@@ -85,7 +84,6 @@ public class MainActivity extends Activity implements OnClickListener, MenuItem.
     @Override
     public boolean onMenuItemClick ( MenuItem p1 ) {
         // TODO: Implement this method
-        
         dialogInfo.show();
         return true;
     }
@@ -124,10 +122,6 @@ public class MainActivity extends Activity implements OnClickListener, MenuItem.
 
         @Override
         public void onClick ( View p1 ) {
-            if((TextView)p1==tvInfo){
-                dialogInfo.dismiss();
-                return;
-            }
             int id = p1.getId();
             int idTv = 900+id;
             int idEt = 90000+id;
@@ -137,8 +131,8 @@ public class MainActivity extends Activity implements OnClickListener, MenuItem.
                 String text = et.getText().toString();
                 if(tv!=null){
                     tv.setText(text);
-                } else mkt("TextView not found");
-            } else mkt("Edittext not found");
+                } else mkt("TextView: "+id+" not found");
+            } else mkt("Edittext: "+id+" not found");
         }
         
     }
