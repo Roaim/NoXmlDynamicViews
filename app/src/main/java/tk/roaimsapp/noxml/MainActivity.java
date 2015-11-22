@@ -24,14 +24,16 @@ import android.util.Log;
 import android.view.Gravity;
 import android.text.TextUtils;
 import android.text.method.ScrollingMovementMethod;
+import android.widget.PopupMenu;
 
 public class MainActivity extends Activity implements OnClickListener, MenuItem.OnMenuItemClickListener
 {
-    
+    private static final String TAG_BT="BT",TAG_TV="TV",TAG_ET="ET";
     private MainLayout layout;
     private Button btBt,btTv,btEt;
     private int btId=0,tvId=900,etId=90000;
     private ScrollView mainSV;
+    private View cv;
     
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -55,7 +57,8 @@ public class MainActivity extends Activity implements OnClickListener, MenuItem.
     @Override
     public boolean onCreateOptionsMenu ( Menu menu ) {
         // TODO: Implement this method
-        MenuItem mi = menu.add("Info");
+        menu.add ( "Clear" ).setIcon ( android.R.drawable.ic_menu_delete ).setOnMenuItemClickListener ( this ).setShowAsAction ( MenuItem.SHOW_AS_ACTION_ALWAYS );
+        MenuItem mi = menu.add ( "Info" );
         mi.setIcon(android.R.drawable.ic_menu_info_details).setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
         mi.setOnMenuItemClickListener(this);   
         
@@ -84,7 +87,34 @@ public class MainActivity extends Activity implements OnClickListener, MenuItem.
     @Override
     public boolean onMenuItemClick ( MenuItem p1 ) {
         // TODO: Implement this method
-        dialogInfo.show();
+        String title = p1.getTitle().toString();
+        
+        if(title.equals("Clear")){
+            if(cv==null)
+            cv=findViewById(p1.getItemId());
+            PopupMenu pm = new PopupMenu(this,cv);
+            pm.getMenu().add("Clear last view").setOnMenuItemClickListener(this);
+            pm.getMenu().add("Clear all views").setOnMenuItemClickListener(this);
+            pm.show();
+        } else if(title.equals("Clear last view")){
+            View v = layout.lastView();
+            if(v==null) return true;
+            String tag = (String) v.getTag();
+            if(tag==TAG_BT){
+                btId--;
+            } else if(tag==TAG_TV){
+                tvId--;
+            } else if(tag==TAG_ET){
+                etId--;
+            }
+            layout.clearLast();
+        } else if(title.equals("Clear all views")){
+            layout.clearAll();
+            btId=0;
+            tvId=900;
+            etId=90000;
+        } else if(title.equals("Info"))
+                dialogInfo.show();
         return true;
     }
 
@@ -95,6 +125,7 @@ public class MainActivity extends Activity implements OnClickListener, MenuItem.
         switch (id){
             case MainLayout.ID:{
                 Button bt = new Button(this);
+                bt.setTag(TAG_BT);
                 bt.setId(btId);
                 bt.setText("Button: "+btId);
                 layout.addView(bt);
@@ -103,6 +134,7 @@ public class MainActivity extends Activity implements OnClickListener, MenuItem.
             } break;
             case MainLayout.ID+1:{
                 TextView tv = new TextView(this);
+                tv.setTag(TAG_TV);
                 tv.setId(tvId);
                 tv.setText("TextView: "+(tvId-900));
                 layout.addView(tv);
@@ -110,6 +142,7 @@ public class MainActivity extends Activity implements OnClickListener, MenuItem.
             } break;
             case MainLayout.ID+2:{
                 EditText et = new EditText(this);
+                et.setTag(TAG_ET);
                 et.setId(etId);
                 et.setHint("EditText: "+(etId-90000));
                 layout.addView(et);

@@ -9,18 +9,18 @@ import android.widget.TextView;
 import android.graphics.Color;
 import android.text.TextUtils;
 import android.text.method.ScrollingMovementMethod;
+import android.view.View;
 
 public class MainLayout extends LinearLayout
 {
+    private LinearLayout layBt;
     public LinearLayout.LayoutParams lp;
     public Button btBt,btTv,btEt;
     public TextView mTv;
     private LinearLayout.LayoutParams btParams;
-
-    public static final int ID = 9000000;
-
-    private static final CharSequence WelcomeText="Welcome! This is an example app to show you how to create a view at runtime without using xml codes. For more detail please tap info icon at the top right corner.";
     
+    public static final int ID = 9000000;
+    private static final CharSequence WelcomeText="Welcome! This is an example app to show you how to create a view at runtime without using xml codes. For more detail please tap info icon at the top right corner.";
     
     public MainLayout(Context context){
         super(context);
@@ -38,7 +38,7 @@ public class MainLayout extends LinearLayout
         mTv.setEllipsize(TextUtils.TruncateAt.MARQUEE);
         mTv.setMovementMethod(new ScrollingMovementMethod());
         super.addView(mTv);
-        LinearLayout layBt=new LinearLayout(context);
+        layBt=new LinearLayout(context);
         layBt.setOrientation(LinearLayout.HORIZONTAL);
         LinearLayout.LayoutParams wLp=new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.WRAP_CONTENT);
         layBt.setLayoutParams(wLp);
@@ -62,6 +62,27 @@ public class MainLayout extends LinearLayout
         layBt.addView(btBt);
         layBt.addView(btTv);
         layBt.addView(btEt);
+        super.addView(layBt);
+    }
+    
+    public View lastView(){
+       int pos = this.getChildCount()-1;
+        if(pos>1){
+            return this.getChildAt(pos);
+        }
+        return null;
+    }
+    
+    public void clearLast(){
+        int pos = this.getChildCount()-1;
+        if(pos>1){
+            this.removeViewAt(pos);
+        }
+    }
+    
+    public void clearAll(){
+        super.removeAllViews();
+        super.addView(mTv);
         super.addView(layBt);
     }
     
