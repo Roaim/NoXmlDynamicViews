@@ -19,7 +19,7 @@ public class MainLayout extends LinearLayout
     public TextView mTv;
     private LinearLayout.LayoutParams btParams;
     
-    public static final int ID = 9000000;
+    public static final int ID = 900000;
     private static final CharSequence WelcomeText="Welcome! This is an example app to show you how to create a view at runtime without using xml codes. For more detail please tap info icon at the top right corner.";
     
     public MainLayout(Context context){
